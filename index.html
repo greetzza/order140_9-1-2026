@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="gambar/logo.png" sizes="192x192">
+    <link rel="apple-touch-icon" href="gambar/logo.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pastel with picture</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Montserrat:wght@300;400&display=swap');
+        
+        :root {
+            --pastel-pink: #ffd6e0;
+            --pastel-mint: #c1f0d2;
+            --pastel-lavender: #d4c4fb;
+            --pastel-peach: #ffdac1;
+            --pastel-blue: #b5ead7;
+            --soft-gray: #f8f9fa;
+            --text-dark: #333333;
+            --text-light: #5a5a5a;
+        }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--pastel-blue);
+            color: var(--text-dark);
+            overflow-x: hidden;
+            overflow-y: auto;
+            height: auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 1s ease;
+        }
+        
+        .card-container {
+            position: relative;
+            height: auto;
+            min-height: 100vh;
+            width: 90%;
+            max-width: 800px; /* Diperbesar untuk menampung konten */
+            perspective: 1000px;
+            margin: 2rem auto;
+            overflow: visible;
+        }
+        
+        .card {
+            position: relative;
+            width: 100%;
+            min-height: 400px; /* Diubah ke min-height untuk konten yang lebih panjang */
+            transform-style: preserve-3d;
+            transition: transform 1s;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+        }
+        
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            box-sizing: border-box;
+            border-radius: 15px;
+            overflow-y: auto; /* Untuk konten yang panjang */
+        }
+        
+        .card-front {
+            background: linear-gradient(135deg, var(--pastel-pink), var(--pastel-peach));
+            z-index: 2;
+        }
+        
+        .card-back {
+            height: auto;
+            min-height: 100%;
+            display: block;
+            background: linear-gradient(135deg, var(--pastel-mint), var(--pastel-lavender));
+            transform: rotateY(180deg);
+            overflow-y: auto;
+            scrollbar-width: thin;
+            justify-content: flex-start; /* Konten dimulai dari atas */
+            padding-top: 3rem; /* Ruang tambahan di atas */
+        }
+        
+        .card-back::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .card-back::-webkit-scrollbar-track {
+            background: #000;
+        }
+
+        .card-back::-webkit-scrollbar-thumb {
+            background-color: #d4af37;
+            border-radius: 5px;
+        }
+
+        .card.is-flipped {
+            transform: rotateY(180deg);
+        }
+        
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+            text-align: center;
+        }
+        
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: var(--text-light);
+            text-align: center;
+            max-width: 80%;
+            margin: 0.5rem 0;
+        }
+        
+        .floral-decoration {
+            position: absolute;
+            opacity: 0.3;
+            z-index: 0;
+        }
+        
+        .floral-1 {
+            top: 20px;
+            left: 20px;
+            font-size: 3rem;
+            transform: rotate(-15deg);
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .floral-2 {
+            bottom: 20px;
+            right: 20px;
+            font-size: 3rem;
+            transform: rotate(15deg);
+            animation: float 7s ease-in-out infinite 1s;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            overflow: visible;
+            height: auto;
+            scrollbar-width: thin;
+        }
+        
+        .btn {
+            margin-top: 2rem;
+            padding: 0.8rem 1.8rem;
+            background-color: white;
+            border: none;
+            border-radius: 50px;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 500;
+            color: var(--text-dark);
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .signature {
+            margin-top: 2rem;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: 1.2rem;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: var(--pastel-pink);
+            opacity: 0;
+            z-index: 10;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) rotate(-15deg);
+            }
+            50% {
+                transform: translateY(-15px) rotate(-15deg);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease-out forwards;
+            opacity: 0;
+        }
+        
+        .delay-1 { animation-delay: 0.3s; }
+        .delay-2 { animation-delay: 0.6s; }
+        .delay-3 { animation-delay: 0.9s; }
+
+        /* Gaya untuk galeri slider */
+        .gallery-container {
+            width: 100%;
+            max-width: 700px;
+            margin: 2rem auto;
+            text-align: center;
+        }
+        
+        .slider {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            margin-bottom: 1rem;
+        }
+        
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+        
+        .slide.active {
+            opacity: 1;
+        }
+        
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .slide-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .slider-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .slider-nav button {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .slider-nav button:hover {
+            background: #555;
+            transform: translateY(-2px);
+        }
+
+        /* Tombol musik */
+        .music-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            z-index: 100;
+        }
+
+        /* Responsif */
+        @media (max-width: 768px) {
+            .card {
+                min-height: 500px;
+            }
+            
+            .slider {
+                height: 300px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card-face {
+                padding: 1.5rem;
+            }
+            
+            .slider {
+                height: 400px;
+            }
+            
+            .slide-caption {
+                padding: 10px;
+                font-size: 0.9rem;
+            }
+        }
+  </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="card" id="card">
+            <div class="card-face card-front">
+                <span class="floral-decoration floral-1">🌸</span>
+                <span class="floral-decoration floral-2">🌼</span>
+                <div class="content">
+                    <h1 class="fade-in">Special Greetings</h1>
+                    <p class="fade-in delay-1">Untuk Kezia</p>
+                    <button class="btn fade-in delay-2" id="open-btn">Open Card</button>
+                </div>
+            </div>
+            <div class="card-face card-back">
+                <span class="floral-decoration floral-1">🌺</span>
+                <span class="floral-decoration floral-2">🌷</span>
+                <div class="content">
+                  
+                    <h1>Untuk Kezia</h1>
+                  <p>Yang ku kenal secara tiba tiba, kezia namanya. wanita yang sangat lucu, cantik, baik, kadang sedikit ngeselin, bisa juga pengertian dan moodnya mudah berubah, terkadang sering insecure tapi tanpa kamu ketahui kamu special dimata ku dan aku sangat menyayangimu. </p>
+                    <div class="signature">- Love you ✨🩵</div>
+                    
+                    <!-- Gallery Section -->
+                    <div class="gallery-container">
+                        <div class="slider">
+                            <div class="slide active">
+                                <img src="keziaa.jpeg" alt="Nature 1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tombol kontrol musik -->
+    <div class="music-btn" id="musicControl">
+        <svg id="musicIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#d23669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+        </svg>
+    </div>
+    
+    <!-- Elemen audio -->
+    <audio id="bgMusic" loop>
+        <source src="wto.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const card = document.getElementById('card');
+            const openBtn = document.getElementById('open-btn');
+            const bgMusic = document.getElementById('bgMusic');
+            const musicControl = document.getElementById('musicControl');
+            const musicIcon = document.getElementById('musicIcon');
+            let musicPlaying = false;
+            
+            // Inisialisasi animasi fade-in untuk elemen di card depan
+            const frontElements = document.querySelectorAll('.card-front .fade-in');
+            frontElements.forEach(el => {
+                el.style.opacity = '0';
+                setTimeout(() => {
+                    el.style.animationPlayState = 'running';
+                }, 100);
+            });
+            
+            // Card flip animation dan mulai musik
+            openBtn.addEventListener('click', function() {
+                card.classList.add('is-flipped');
+                createConfetti();
+                
+                // Mulai memutar musik
+                bgMusic.play()
+                    .then(() => {
+                        musicPlaying = true;
+                        musicIcon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
+                    })
+                    .catch(error => {
+                        console.log('Autoplay prevented:', error);
+                        // Tampilkan tombol untuk memulai musik
+                        musicControl.style.display = 'flex';
+                    });
+            });
+            
+            // Kontrol musik
+            musicControl.addEventListener('click', function() {
+                if (musicPlaying) {
+                    bgMusic.pause();
+                    musicPlaying = false;
+                    musicIcon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line>';
+                } else {
+                    bgMusic.play()
+                        .then(() => {
+                            musicPlaying = true;
+                            musicIcon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
+                        })
+                        .catch(error => {
+                            console.log('Playback failed:', error);
+                        });
+                }
+            });
+            
+            // Create confetti effect
+            function createConfetti() {
+                const colors = ['#ffd6e0', '#c1f0d2', '#d4c4fb', '#ffdac1', '#b5ead7'];
+                const cardContainer = document.querySelector('.card-container');
+                
+                for (let i = 0; i < 100; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.left = Math.random() * 100 + '%';
+                    confetti.style.top = -10 + 'px';
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    confetti.style.width = Math.random() * 8 + 5 + 'px';
+                    confetti.style.height = confetti.style.width;
+                    
+                    cardContainer.appendChild(confetti);
+                    
+                    animateConfetti(confetti);
+                }
+            }
+            
+            function animateConfetti(element) {
+                const startX = parseFloat(element.style.left);
+                const startY = -10;
+                const endY = Math.random() * 100 + 100;
+                const rotation = Math.random() * 360;
+                const duration = Math.random() * 3000 + 2000;
+                
+                // Random swaying motion
+                const swayX = (Math.random() - 0.5) * 100;
+                
+                element.style.opacity = '0.8';
+                
+                const startTime = performance.now();
+                
+                function animate(time) {
+                    const elapsed = time - startTime;
+                    const progress = Math.min(elapsed / duration, 1);
+                    
+                    const x = startX + swayX * Math.sin(progress * Math.PI * 2);
+                    const y = startY + (endY - startY) * progress;
+                    const currentRotation = rotation * progress;
+                    
+                    element.style.left = x + '%';
+                    element.style.top = y + 'px';
+                    element.style.transform = `rotate(${currentRotation}deg)`;
+                    
+                    if (progress < 1) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        element.style.opacity = '0';
+                        setTimeout(() => {
+                            element.remove();
+                        }, 1000);
+                    }
+                }
+                
+                requestAnimationFrame(animate);
+            }
+            
+            // Fungsi untuk slider gallery
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prev');
+            const nextBtn = document.getElementById('next');
+            let currentSlide = 0;
+
+            function showSlide(n) {
+                slides.forEach(slide => slide.classList.remove('active'));
+                currentSlide = (n + slides.length) % slides.length;
+                slides[currentSlide].classList.add('active');
+            }
+
+            function nextSlide() {
+                showSlide(currentSlide + 1);
+            }
+
+            function prevSlide() {
+                showSlide(currentSlide - 1);
+            }
+
+            nextBtn.addEventListener('click', nextSlide);
+            prevBtn.addEventListener('click', prevSlide);
+
+            // Auto slide setiap 5 detik
+            setInterval(nextSlide, 5000);
+            
+            // Change background color periodically
+            const pastelColors = ['#ffd6e0', '#c1f0d2', '#d4c4fb', '#ffdac1', '#b5ead7'];
+            let currentColorIndex = 0;
+            
+            setInterval(() => {
+                currentColorIndex = (currentColorIndex + 1) % pastelColors.length;
+                document.body.style.backgroundColor = pastelColors[currentColorIndex];
+            }, 8000);
+        });
+    </script>
+</body>
+
+</html>
